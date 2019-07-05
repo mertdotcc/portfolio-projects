@@ -1,0 +1,68 @@
+model ModelName
+
+  options noimplicit
+  uses "mmxprs"
+  ! uses "mminsight" ! uncomment this line for an Xpress Insight model
+
+  declarations
+    ! ...
+    Warehouse=1..2
+    Shops=1..5
+    Cost: array(Shops) of real
+    Inventory: array(Warehouse) of integer
+    Demand: array(Shops) of integer
+    Fixed_cost: array(Warehouse, Shops) of real
+    Max_Amount=3
+
+    ! DECLARATIONS OF VARIABLES
+    Z: array(Shops) of mpvar
+    X: array(Warehouse, Shops) of mpvar
+    Y: array(Warehouse, Shops) of mpvar
+
+    Objective:linctr
+  end-declarations
+
+Cost::[1.9, 1.6, 1.0, 1.8, 2.0]
+Inventory::[669, 561]
+Demand:: [275, 351, 399, 195, 381]
+Fixed_cost:: [221, 279, 295, 284, 314,
+              343, 284, 296, 258, 278]
+
+!Constraints are:
+forall(j in Shops)
+sum(i in Warehouse) X(i,j) + Z(j) >= Demand(j)
+
+forall(j in Shops)
+sum(i in Warehouse) X(i,j) >= Z(j) 
+
+forall(i in Warehouse)
+sum(j in Shops) X(i,j) <= Inventory(i)
+
+forall(i in Warehouse, j in Shops)
+X(i,j)<= Demand(j)*Y(i,j)
+
+forall(j in Shops)
+sum(i in Warehouse) Y(i,j)=1
+
+forall(i in Warehouse)
+sum(j in Shops) Y(i,j)<= Max_Amount
+
+forall(i in Warehouse, j in Shops) do
+X(i,j)>= 0
+Y(i,j) is_binary
+end-do
+
+forall(j in Shops)
+Z(j)>=0
+
+!The objective function is:
+Objective := sum(i in Warehouse) sum(j in Shops) Fixed_cost(i,j)*Y(i,j) + sum(j in Shops) Cost(j)*Z(j)
+
+minimize(Objective)
+
+!If we want to print out the solution:
+writeln("Solution: \nObjective: ", getobjval)
+forall(j in Shops, i in Warehouse) writeln(" X(",i,j,"):", getsol(X(i,j)))
+forall(j in Shops, i in Warehouse) writeln(" Y(",i,j,"):", getsol(Y(i,j)))
+forall(j in Shops) writeln(" Z(",j,"):", getsol(Z(j)))
+end-model
