@@ -1,24 +1,21 @@
-def model_test(model, test_loader, gpu):
-    correct=0
-    total=0
+def classifier_create(model, n_input_units, n_hidden_units1, n_hidden_units2, dropout_rate):
 
-    if gpu==True:
-        model.to("cuda")
-    else:
-        pass
+    # No need
+    for p in model.parameters():
+        p.requires_grad = False
 
-    with torch.no_grad():
-        for ii, (images, labels) in enumerate(test_loader):
+    from collections import OrderedDict
+    classifier = nn.Sequential(OrderedDict([
+                              ('fc1', nn.Linear(n_input_units, n_hidden_units1)),
+                              ('relu', nn.ReLU()),
+                              ('dropout1', nn.Dropout(dropout_rate)),
+                              ('fc2', nn.Linear(n_hidden_units1, n_hidden_units2)),
+                              ('relu', nn.ReLU()),
+                              ('dropout2', nn.Dropout(dropout_rate)),
+                              ('fc3', nn.Linear(n_hidden_units2, 102)),
+                              ('output', nn.LogSoftmax(dim=1))
+                              ]))
 
-            if gpu==True:
-                images, labels = images.to("cuda"), labels.to("cuda")
-            else:
-                pass
+    model.classifier = classifier
 
-            outputs = model(images)
-            nevermind, predicted = torch.max(outputs.data, 1)
-
-            correct += (predicted == labels).sum().item()
-            total += labels.size(0)
-
-    print("Accuracy of the network on the test dataset is: {:.3f}%".format(100 * correct / total))
+    return model
