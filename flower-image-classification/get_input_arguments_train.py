@@ -3,7 +3,7 @@
 
 import argparse
 
-def get_input_arguments():
+def get_input_arguments_train():
     """
     Takes the argument from the user through the command line.
     Arguments:
