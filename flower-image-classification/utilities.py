@@ -190,7 +190,7 @@ def get_validation(model, validation_loader, criterion, gpu):
 
     for ii, (images, labels) in enumerate(validation_loader):
 
-        if gpu_mode==True:
+        if gpu==True:
             images, labels = images.to('cuda'), labels.to('cuda')
         else:
             pass
