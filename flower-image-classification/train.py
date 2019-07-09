@@ -1,28 +1,18 @@
-def predict(image, model, topk, gpu):
+# ------------------------------
+# AUTHOR: MERT ÖZTÜRK
+# Contact: mert1ozturk@gmail.com
+# ------------------------------
 
-    model.eval()
+import json
+import torch
+import argparse
+import numpy as np
+from torch import nn, optim
+from torchvision import datasets, transforms, models
+import torch.nn.functional as F
+from PIL import Image
 
-    if gpu==True:
-        model.to("cuda")
-    else:
-        model.cpu()
-
-    with torch.no_grad():
-        output = model.forward(image)
-
-    probabilities = torch.exp(output)
-    probabilities_top = probabilities.topk(topk)[0]
-    indexes_top = probabilities.topk(topk)[1]
-
-    probabilities_top_list = np.array(probabilities_top)[0]
-    indexes_top_list = np.array(indexes_top[0])
-
-    class_to_idx = model.class_to_idx
-
-    indexes_to_classes = {y: x for x, y in class_to_idx.items()}
-
-    classes_top_list = []
-    for item in indexes_top_list:
-        classes_top_list += [indexes_to_classes[item]]
-
-    return probabilities_top_list, classes_top_list
+# Custom methods
+from utilities import model_train, model_test, model_save
+from utilities import checkpoint_load, data_load, image_preprocess
+from utilities import classifier_create, get_validation, predict
