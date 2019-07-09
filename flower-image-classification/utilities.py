@@ -75,7 +75,7 @@ def image_preprocess(image_dir):
 
 def model_train(model, epoch, optimizer, criterion, gpu, training_loader, validation_loader):
     # Default values
-    epoch=5
+    epochs=5
     steps=3
     print_every=10
 
@@ -201,7 +201,7 @@ def get_validation(model, validation_loader, criterion, gpu):
         equality = (labels.data == probabilities.max(dim=1)[1])
         accuracy += equality.type(torch.FloatTensor).mean()
 
-    return valvalidation_lossid_loss, accuracy
+    return validation_loss, accuracy
 
 
 def classifier_create(model, n_input_units, n_hidden_units, dropout_rate):
