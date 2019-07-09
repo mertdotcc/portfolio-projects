@@ -109,7 +109,7 @@ def model_train(model, epoch, optimizer, criterion, gpu, training_loader, valida
                 model.eval()
 
                 with torch.no_grad():
-                    validation_loss, accuracy = validation(model, validation_loader, criterion, gpu)
+                    validation_loss, accuracy = get_validation(model, validation_loader, criterion, gpu)
 
                 validation_loss = validation_loss / len(validation_loader)
 
