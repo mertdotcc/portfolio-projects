@@ -25,7 +25,7 @@ def get_input_arguments_train():
 
     parser = argparse.ArgumentParser()
 
-    parser.add_argument("--dir", type=str, default="flowers", help="Type in the directory of your dataset.")
+    parser.add_argument("--dir", type=str, default="flower_data", help="Type in the directory of your dataset.")
     parser.add_argument("--model", type=str, default="vgg19", help="Type in the NN model you want to train with. Available models are: vgg19, alexnet, densenet121.")
     parser.add_argument("--checkpoint", type=str, default="checkpoint.pth", help="Type in the directory of your pretrained model if you have any.")
     parser.add_argument("--lr", type=float, default=0.001, help="Type in the learning rate you want.")
