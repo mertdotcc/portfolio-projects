@@ -75,9 +75,11 @@ def image_preprocess(image_dir):
 
 def model_train(model, epoch, optimizer, criterion, gpu, training_loader, validation_loader):
     # Default values
-    epochs=5
     steps=3
     print_every=10
+
+    print("Initializing the training process...")
+    print("-"*36)
 
     if gpu==True:
         model.to("cuda")
@@ -113,16 +115,16 @@ def model_train(model, epoch, optimizer, criterion, gpu, training_loader, valida
 
                 validation_loss = validation_loss / len(validation_loader)
 
-                print("Epoch: {}/{}    ".format(e+1, epochs),
-                      "Training Loss: {:.3f}%    ".format(running_loss/print_every),
-                      "Validation Lost: {:.3f}%    ".format(100*validation_loss/len(validation_loader)),
-                      "Accuracy: {:.3f}%    ".format(100*accuracy/len(validation_loader)))
+                print("Epoch: {}/{}  | ".format(e+1, epoch),
+                      "Training Loss: {:.3f}  | ".format(running_loss/print_every),
+                      "Validation Lost: {:.3f}  | ".format(validation_loss/len(validation_loader)),
+                      "Accuracy: {:.3f}%".format(100*accuracy/len(validation_loader)))
 
                 running_loss = 0
 
                 # Setting the model back to training since we are done with evaluation
                 model.train()
-
+    print("Training process is complete!")
     return model, optimizer
 
 
@@ -164,14 +166,10 @@ def model_save(model, epoch, optimizer, training_data, save_dir):
     return torch.save(checkpoint, save_dir)
 
 
-def checkpoint_load(model, save_dir, gpu):
+def checkpoint_load(checkpoint_dir="checkpoint.pth"):
 
-    if gpu==True:
-        checkpoint = torch.load(save_dir)
-    else:
-        # Refer: https://discuss.pytorch.org/t/on-a-cpu-device-how-to-load-checkpoint-saved-on-gpu-device/349/2
-        checkpoint = torch.load(save_dir, map_location=lambda storage, loc: storage)
-
+    checkpoint = torch.load(checkpoint_dir)
+    model = models.vgg19(pretrained=True)
     model.classifier = checkpoint['classifier']
     model.load_state_dict(checkpoint['state_dict'])
     model.class_to_idx = checkpoint['class_to_idx']
