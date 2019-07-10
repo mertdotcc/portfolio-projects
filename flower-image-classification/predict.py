@@ -38,7 +38,7 @@ model_architecture = user_input.checkpoint
 with open(category_names, "r") as f:
     cat_to_name = json.load(f)
 
-model = getattr(models, model_architecture)(pretrained=True)
+model = getattr(models, checkpoint_load(model_architecture, save_dir, gpu))(pretrained=True)
 
 model_loaded = checkpoint_load(model, save_dir, gpu)
 
@@ -59,5 +59,5 @@ for i in classes:
     classes_names += [cat_to_name[i]]
 
 print("The flower in the photo you uploaded is most likely {} with the probability of {:.2f}%".format(classes_names[0], probabilities[0]))
-print("Our second guess is {} with the probability of {:.2f}%").format(classes_names[1], probabilities[1]))
-print("And our third guess is {} with the probability of {:.2f}%").format(classes_names[2], probabilities[2]))
+print("Our second guess is {} with the probability of {:.2f}%".format(classes_names[1], probabilities[1]))
+print("And our third guess is {} with the probability of {:.2f}%".format(classes_names[2], probabilities[2]))
