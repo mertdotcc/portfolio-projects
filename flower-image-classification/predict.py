@@ -33,14 +33,14 @@ topk = user_input.topk
 prediction_image_dir = user_input.image
 category_names = user_input.categories
 save_dir = user_input.savedir
-model_architecture = user_input.checkpoint
+# model_architecture = user_input.checkpoint
 
 with open(category_names, "r") as f:
     cat_to_name = json.load(f)
 
-model = getattr(models, checkpoint_load(model_architecture, save_dir, gpu))(pretrained=True)
+model_loaded = checkpoint_load("checkpoint.pth")
 
-model_loaded = checkpoint_load(model, save_dir, gpu)
+# model = getattr(models, "checkpoint.pth")(pretrained=True)
 
 image_processed = image_preprocess(prediction_image_dir)
 
@@ -50,7 +50,7 @@ else:
     pass
 
 # Make predictions
-probabilities, classes = predict(image_processed, model, topk, gpu)
+probabilities, classes = predict(image_processed, model_loaded, topk, gpu)
 print(probabilities)
 print(classes)
 
