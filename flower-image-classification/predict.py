@@ -7,7 +7,8 @@ import json
 import torch
 import argparse
 import numpy as np
-from torch import nn, optim
+from torch import nn
+from torch import optim
 from torchvision import datasets, transforms, models
 import torch.nn.functional as F
 from PIL import Image
