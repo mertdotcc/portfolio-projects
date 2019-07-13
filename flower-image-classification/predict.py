@@ -7,8 +7,7 @@ import json
 import torch
 import argparse
 import numpy as np
-from torch import nn
-from torch import optim
+from torch import nn, optim
 from torchvision import datasets, transforms, models
 import torch.nn.functional as F
 from PIL import Image
@@ -39,7 +38,7 @@ save_dir = user_input.savedir
 with open(category_names, "r") as f:
     cat_to_name = json.load(f)
 
-model_loaded = checkpoint_load("checkpoint.pth")
+model_loaded = checkpoint_load(user_input.checkpoint)
 
 # model = getattr(models, "checkpoint.pth")(pretrained=True)
 
@@ -59,6 +58,6 @@ classes_names = []
 for i in classes:
     classes_names += [cat_to_name[i]]
 
-print("The flower in the photo you uploaded is most likely {} with the probability of {:.2f}%".format(classes_names[0], probabilities[0]))
-print("Our second guess is {} with the probability of {:.2f}%".format(classes_names[1], probabilities[1]))
-print("And our third guess is {} with the probability of {:.2f}%".format(classes_names[2], probabilities[2]))
+print("The flower in the photo you uploaded is most likely {} with the probability of {:.2f}%".format(classes_names[0], 100*probabilities[0]))
+print("Our second guess is {} with the probability of {:.2f}%".format(classes_names[1], 100*probabilities[1]))
+print("And our third guess is {} with the probability of {:.2f}%".format(classes_names[2], 100*probabilities[2]))
