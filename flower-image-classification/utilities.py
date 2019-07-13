@@ -81,7 +81,7 @@ def model_train(model, epoch, optimizer, criterion, gpu, training_loader, valida
     print("Initializing the training process...")
     print("-"*36)
 
-    if gpu==True:
+    if gpu==True and torch.cuda.is_available():
         model.to("cuda")
     else:
         pass
@@ -92,8 +92,8 @@ def model_train(model, epoch, optimizer, criterion, gpu, training_loader, valida
         for ii, (inputs, labels) in enumerate(training_loader):
             steps += 1
 
-            if gpu==True:
-                inputs, labels = inputs.to('cuda'), labels.to('cuda')
+            if gpu==True and torch.cuda.is_available():
+                inputs, labels = inputs.to("cuda"), labels.to("cuda")
             else:
                 pass
 
@@ -132,7 +132,7 @@ def model_test(model, test_loader, gpu):
     correct=0
     total=0
 
-    if gpu==True:
+    if gpu==True and torch.cuda.is_available():
         model.to("cuda")
     else:
         pass
@@ -140,7 +140,7 @@ def model_test(model, test_loader, gpu):
     with torch.no_grad():
         for ii, (images, labels) in enumerate(test_loader):
 
-            if gpu==True:
+            if gpu==True and torch.cuda.is_available():
                 images, labels = images.to("cuda"), labels.to("cuda")
             else:
                 pass
@@ -169,7 +169,6 @@ def model_save(model, epoch, optimizer, training_data, save_dir):
 def checkpoint_load(checkpoint_dir="checkpoint.pth"):
 
     checkpoint = torch.load(checkpoint_dir)
-    model = models.vgg19(pretrained=True)
     model.classifier = checkpoint['classifier']
     model.load_state_dict(checkpoint['state_dict'])
     model.class_to_idx = checkpoint['class_to_idx']
@@ -181,14 +180,14 @@ def get_validation(model, validation_loader, criterion, gpu):
     validation_loss = 0
     accuracy = 0
 
-    if gpu==True:
+    if gpu==True and torch.cuda.is_available():
         model.to('cuda')
     else:
         pass
 
     for ii, (images, labels) in enumerate(validation_loader):
 
-        if gpu==True:
+        if gpu==True and torch.cuda.is_available():
             images, labels = images.to('cuda'), labels.to('cuda')
         else:
             pass
@@ -226,7 +225,7 @@ def predict(image, model, topk, gpu):
 
     model.eval()
 
-    if gpu==True:
+    if gpu==True and torch.cuda.is_available():
         model.to("cuda")
     else:
         model.cpu()
